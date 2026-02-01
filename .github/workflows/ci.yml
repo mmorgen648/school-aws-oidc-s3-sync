@@ -16,3 +16,5 @@ jobs:
 
       - name: Test repo variable
         run: echo "MEINEVAR=${{ vars.MEINEVAR }}"
+      - name: Test repo secret (will be masked)
+        run: echo "MEINSECRET=${{ secrets.MEINSECRET }}"
