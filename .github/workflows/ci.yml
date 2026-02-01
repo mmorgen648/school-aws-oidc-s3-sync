@@ -18,3 +18,26 @@ jobs:
         run: echo "MEINEVAR=${{ vars.MEINEVAR }}"
       - name: Test repo secret (will be masked)
         run: echo "MEINSECRET=${{ secrets.MEINSECRET }}"
+
+  s3-sync:
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-north-1
+          role-to-assume: arn:aws:iam::038217523163:role/github-s3-sync-role
+
+      - name: Sync to S3
+        run: |
+          aws s3 sync . s3://s3-oidc-sync-test-bucket/ \
+            --delete \
+            --exclude ".git/*" \
+            --exclude ".github/*"
+
