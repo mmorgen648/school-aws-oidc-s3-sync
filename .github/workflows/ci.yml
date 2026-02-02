@@ -28,19 +28,36 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # NEU – Node installieren
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # NEU – Tests ausführen
+      - name: Run Tests
+        run: |
+          cd src
+          npm install
+          npm test
+
+      # NEU – Build ausführen
+      - name: Run Build
+        run: |
+          cd src
+          npm run build
+
       - name: Configure AWS
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: eu-north-1
           role-to-assume: arn:aws:iam::038217523163:role/github-s3-sync-role
 
+      # GEÄNDERT – nur dist hochladen
       - name: Sync to S3
         run: |
-          aws s3 sync . s3://s3-oidc-sync-test-bucket/ \
-            --delete \
-            --exclude ".git/*" \
-            --exclude ".github/*"
-            # Job Summaries mit $GITHUB_STEP_SUMMARY
+          aws s3 sync src/dist s3://s3-oidc-sync-test-bucket/ --delete
+
   monitoring-example:
     runs-on: ubuntu-latest
     steps:
@@ -62,4 +79,3 @@ jobs:
           echo "### Test Results" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Unit Tests: 42 passed" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Integration Tests: 12 passed" >> $GITHUB_STEP_SUMMARY
-
