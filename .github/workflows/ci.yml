@@ -40,4 +40,26 @@ jobs:
             --delete \
             --exclude ".git/*" \
             --exclude ".github/*"
+            # Job Summaries mit $GITHUB_STEP_SUMMARY
+  monitoring-example:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Job Summary erstellen
+      - name: Create Job Summary
+        run: |
+          echo "## 🚀 Build Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Branch | ${{ github.ref_name }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Commit | ${{ github.sha }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Actor | ${{ github.actor }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Status | ✅ Success |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Unit Tests: 42 passed" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Integration Tests: 12 passed" >> $GITHUB_STEP_SUMMARY
 
