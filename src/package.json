@@ -4,6 +4,7 @@
   "description": "simple test app",
   "main": "index.js",
   "scripts": {
-    "test": "node test.js"
+    "test": "node test.js",
+    "build": "node build.js"
   }
 }
